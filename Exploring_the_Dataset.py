@@ -10,10 +10,14 @@ print(df.info())
 
 # print(df.isna().sum()) already shown no null values in data.info() but included 
 
-# No relevant duplicates values if there were i would use code below
-# variable = Table_name.drop_duplicates(subset['column_name1'])
-# Also with missing values I would fill
-#or df.fillna(df.mean(), inplace=True)
+# No merging or relevant duplicate/missing values to drop, code below is what i would do:(excuse the lack of imagination for table/variable names)
+# new_df = pd.merge(left=df, right=df2, how='left', left_on='Country Name', right_on='Country Column')
+# Also with missing numeric values the two options i would've considered are below:
+# new_df.fillna(new_df.mean(), inplace=True) but think it would be better to drop in this context 
+# new_df.dropna(self, axis=0, how='any', thresh=None, subset=None, inplace=False)
+# new_df2 = new_df.drop_duplicates(subset['column_name1'])
+
+
 
 df1=df.sort_values('Country name', ascending = True).reset_index(drop=True)
 df1.rename(columns={'Country name':'Country_Name',
@@ -55,6 +59,7 @@ def CountryCalc(column):
 
 
 print(RegCalc('Ladder_Score'))
+print(' ')#for my output readability 
 print(RegCalc('E_Log_GDPper_Capita'))
 print(CountryCalc('Ladder_Score'))
 print(CountryCalc('Social_Support'))
