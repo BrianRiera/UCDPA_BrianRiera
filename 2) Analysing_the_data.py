@@ -1,8 +1,11 @@
 import pandas as pd
 import numpy as np
 df = pd.read_csv('world_happiness_report_alter.csv')
+
 # print(df['Regional indicator'].unique()), wanted each one on a new line so used code below instead
 print(df['Regional_Indicator'].value_counts())
+#print(df.loc[:,['Regional_Indicator']].value_counts()) 
+
 print('--'*30)
 
 def RegCalc(column):
@@ -32,7 +35,7 @@ print(CountryCalc('Social_Support'))
         #corr_df = df['Ladder_Score']
         #correlation=corr_df.corrwith(corr_df2, axis = 1) tried axis=0 also
         #print(correlation)
-        #AttributeError: 'Series' object has no attribute 'corrwith'
+        #AttributeError: 'Series' object has no attribute 'corrwith', corrwith is for two dataframes
 #Method 3
         #correlation=df['Ladder_Score'].corr(df[6:], method='pearson') 
         #ValueError: operands could not be broadcast together with shapes (143,) (143,20)
@@ -41,7 +44,16 @@ print(CountryCalc('Social_Support'))
         #print(df_for_corr.corrwith(df['Ladder_Score']))
         #returned everything as NaN in .corrwith calc
 print('--'*30)
-df_for_corr = df.iloc[:,6:]
+df_for_corr = df.iloc[:,6:22]
 pearson_scores_nan = df_for_corr.corrwith(df['Ladder_Score'])
 pearson_scores=pearson_scores_nan.dropna()
 print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
+
+#create function that shows what percent of each region >= mean LS 
+#var=df[np.logical_and(df['Ladder_Score'] >df['Ladder_Score'].mean(),df['Regional_Indicator'].isin(['Latin America and Caribbean']))]
+#print(var.Country_Name)
+
+#(df.loc[df.Regional_Indicator == 'Latin America and Caribbean', 'Regional_Indicator'].count())
+
+for i, row in df.head(10).iterrows():
+    print(i,row['Country_Name'], 'is categorised as', row['Ladder_Category'], )
