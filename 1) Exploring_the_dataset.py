@@ -57,9 +57,9 @@ print('--'*30)
 print('--'*30)
 df1['Ladder_Category'] = None
 for idx, row in df1.iterrows():
-        if row['Ladder_Score'] <= 3.29:
+        if row['Ladder_Score'] <= 3.333:
                 df1.loc[idx, 'Ladder_Category'] = 'Suffering'
-        elif row['Ladder_Score'] <=6.59:
+        elif row['Ladder_Score'] <=6.666:
                 df1.loc[idx, 'Ladder_Category'] = 'Struggling'
         else:
                 df1.loc[idx, 'Ladder_Category'] = 'Thriving'

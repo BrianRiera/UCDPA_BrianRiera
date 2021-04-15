@@ -3,7 +3,9 @@ import numpy as np
 df = pd.read_csv('world_happiness_report_alter.csv')
 
 # print(df['Regional indicator'].unique()), wanted each one on a new line so used code below instead
-print(df['Regional_Indicator'].value_counts())
+print(df['Regional_Indicator'].value_counts().sort_index())
+print('--'*30)
+print(df.value_counts(['Regional_Indicator','Ladder_Category']).sort_index())
 #print(df.loc[:,['Regional_Indicator']].value_counts()) 
 
 print('--'*30)
@@ -25,6 +27,7 @@ print(RegCalc('E_Log_GDPper_Capita'))
 print('--'*30)
 print(CountryCalc('Ladder_Score'))
 print(CountryCalc('Social_Support'))
+
 
 # Want to print correlation between Ladder_Score and the rest of the relevant columns
 #Method one: 
@@ -48,12 +51,3 @@ df_for_corr = df.iloc[:,6:22]
 pearson_scores_nan = df_for_corr.corrwith(df['Ladder_Score'])
 pearson_scores=pearson_scores_nan.dropna()
 print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
-
-#create function that shows what percent of each region >= mean LS 
-#var=df[np.logical_and(df['Ladder_Score'] >df['Ladder_Score'].mean(),df['Regional_Indicator'].isin(['Latin America and Caribbean']))]
-#print(var.Country_Name)
-
-#(df.loc[df.Regional_Indicator == 'Latin America and Caribbean', 'Regional_Indicator'].count())
-
-for i, row in df.head(10).iterrows():
-    print(i,row['Country_Name'], 'is categorised as', row['Ladder_Category'], )
