@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt 
+import seaborn as sns
 df = pd.read_csv('world_happiness_report_alter.csv')
 
 # print(df['Regional indicator'].unique()), wanted each one on a new line so used code below instead
@@ -57,3 +59,15 @@ df_for_corr = df.iloc[:,6:12]
 pearson_scores = df_for_corr.corrwith(df['Ladder_Score'],method='pearson')
 print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
 
+#heatmap
+world_columns = ['GDP per Capita','Social support','Life expectancy','Freedom','Generosity','Perceptions of corruption','Ladder score']
+df_1 = df.iloc[:,6:12]
+df_2 = df.iloc[:,2:3]
+df_corr = pd.concat([df_1 , df_2], axis=1)
+sns.heatmap(df_corr.corr(),annot=True,linewidths=.5,cmap='coolwarm',xticklabels=world_columns, yticklabels=world_columns)
+plt.xticks(rotation=90) 
+plt.yticks(rotation=0) 
+plt.title('Pearson Correlation Heatmap', fontsize =20)
+plt.tight_layout() # this one line took me about 2 hours, could not figure out how to not cut off my x and yicklabels, sns.set_context(), figsize etc didnt work
+plt.savefig('Heatmap.png')
+plt.show()
