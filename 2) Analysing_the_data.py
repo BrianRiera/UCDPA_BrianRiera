@@ -7,6 +7,7 @@ print(df['Regional_Indicator'].value_counts().sort_index())
 print('--'*30)
 print(df.value_counts(['Regional_Indicator','Ladder_Category']).sort_index())
 #print(df.loc[:,['Regional_Indicator']].value_counts()) 
+print(df['Ladder_Category'].value_counts())
 
 print('--'*30)
 
@@ -23,10 +24,18 @@ def CountryCalc(column):
 print('--'*30)
 print(RegCalc('Ladder_Score'))
 print('--'*30)
-print(RegCalc('E_Log_GDPper_Capita'))
+print(RegCalc('Logged_GDPper_Capita'))
 print('--'*30)
+print(RegCalc('Social_Support'))
+print('--'*30)
+print(RegCalc('Freedom_Make_Life_Choices'))
+print('--'*30)
+print(RegCalc('Healthy_Life_Expectancy'))
+print('--'*30)
+
 print(CountryCalc('Ladder_Score'))
 print(CountryCalc('Social_Support'))
+
 
 
 # Want to print correlation between Ladder_Score and the rest of the relevant columns
@@ -42,12 +51,9 @@ print(CountryCalc('Social_Support'))
 #Method 3
         #correlation=df['Ladder_Score'].corr(df[6:], method='pearson') 
         #ValueError: operands could not be broadcast together with shapes (143,) (143,20)
-#Method 4
-        #df_for_corr = df.iloc[:,6:] + df.iloc[:,13:] 
-        #print(df_for_corr.corrwith(df['Ladder_Score']))
-        #returned everything as NaN in .corrwith calc
+#Method 4: print relevant columns
 print('--'*30)
-df_for_corr = df.iloc[:,6:22]
-pearson_scores_nan = df_for_corr.corrwith(df['Ladder_Score'])
-pearson_scores=pearson_scores_nan.dropna()
+df_for_corr = df.iloc[:,6:12]
+pearson_scores = df_for_corr.corrwith(df['Ladder_Score'],method='pearson')
 print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
+
