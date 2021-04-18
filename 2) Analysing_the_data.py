@@ -8,37 +8,34 @@ df = pd.read_csv('world_happiness_report_alter.csv')
 print(df['Regional_Indicator'].value_counts().sort_index())
 print('--'*30)
 print(df.value_counts(['Regional_Indicator','Ladder_Category']).sort_index())
-#print(df.loc[:,['Regional_Indicator']].value_counts()) 
+
 print(df['Ladder_Category'].value_counts())
 
 print('--'*30)
 
 def RegCalc(column):
         return(df.groupby('Regional_Indicator', as_index=False).agg({column:['min','max','mean']}).round(3))
-print('--'*30)
+
 #not sure if its bad practice to use spaces between apostrophes eg ' while ' or to use + ' ' +
 #struggled with this one to figure out how to return a single value and its corresponding country 
 #ended up with with code below
+
 def CountryCalc(column):
         var=df.iloc[df[column].idxmax()]
         var1=df.iloc[df[column].idxmin()]
         return(var[0] +' scored highest in '+ column +' while '+ var1[0] +' scored lowest in '+ column)
-print('--'*30)
-print(RegCalc('Ladder_Score'))
-print('--'*30)
-print(RegCalc('Logged_GDPper_Capita'))
-print('--'*30)
-print(RegCalc('Social_Support'))
-print('--'*30)
-print(RegCalc('Freedom_Make_Life_Choices'))
-print('--'*30)
-print(RegCalc('Healthy_Life_Expectancy'))
-print('--'*30)
 
+df_1 = df.iloc[:,6:12]
+df_2 = df.iloc[:,2:3]
+df_calc = pd.concat([df_1 , df_2], axis=1)
+
+for x in df_calc:
+        print(RegCalc(x))
+
+print('--'*30)
 print(CountryCalc('Ladder_Score'))
-print(CountryCalc('Social_Support'))
-
-
+print(CountryCalc('Logged_GDPper_Capita'))
+print('--'*30)
 
 # Want to print correlation between Ladder_Score and the rest of the relevant columns
 #Method one: 
@@ -54,20 +51,9 @@ print(CountryCalc('Social_Support'))
         #correlation=df['Ladder_Score'].corr(df[6:], method='pearson') 
         #ValueError: operands could not be broadcast together with shapes (143,) (143,20)
 #Method 4: print relevant columns
-print('--'*30)
-df_for_corr = df.iloc[:,6:12]
-pearson_scores = df_for_corr.corrwith(df['Ladder_Score'],method='pearson')
+# print('--'*30)
+
+pearson_scores = df_1.corrwith(df['Ladder_Score'],method='pearson')
 print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
 
-#heatmap
-world_columns = ['GDP per Capita','Social support','Life expectancy','Freedom','Generosity','Perceptions of corruption','Ladder score']
-df_1 = df.iloc[:,6:12]
-df_2 = df.iloc[:,2:3]
-df_corr = pd.concat([df_1 , df_2], axis=1)
-sns.heatmap(df_corr.corr(),annot=True,linewidths=.5,cmap='coolwarm',xticklabels=world_columns, yticklabels=world_columns)
-plt.xticks(rotation=90) 
-plt.yticks(rotation=0) 
-plt.title('Pearson Correlation Heatmap', fontsize =20)
-plt.tight_layout() # this one line took me about 2 hours, could not figure out how to not cut off my x and yicklabels, sns.set_context(), figsize etc didnt work
-plt.savefig('Heatmap.png')
-plt.show()
+

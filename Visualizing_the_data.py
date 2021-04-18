@@ -3,58 +3,69 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 df = pd.read_csv('world_happiness_report_alter.csv')
 
+world_columns = ['GDP per Capita','Social support','Life expectancy','Freedom','Generosity','Perceptions of corruption','Ladder score']
 
-# sns.relplot(x=df.Ladder_Score, y=df.Healthy_Life_Expectancy, hue=df.Regional_Indicator,kind='line', style=df.Regional_Indicator,markers=True,dashes=False)
-# plt.show()
-# hue_colours = {'Central and Eastern Europe':           
-# 'Commonwealth of Independent States':    
-# 'East Asia':                             
-# 'Latin America and Caribbean':           
-# 'Middle East and North Africa':          
-# 'North America and ANZ'                  
-# 'South Asia':                           
-# 'Southeast Asia':                         
-# 'Sub-Saharan Africa':                   
-# 'Western Europe':      
-                  
-# plt.figure(figsize=(10,6))
-# # make barplot and sort bars in descending order
-# sns.barplot(x='Education', 
-#             y="Salary", 
-#             data=df, 
-#             order=df.sort_values('Salary',ascending = False).Education)
-# # set labels
-# plt.xlabel("Education", size=15)
-# plt.ylabel("Salary in US Dollars", size=15)
-# plt.title("Sort Bars in Barplot in Descending Order", size=18)
-# plt.tight_layout()
-# plt.savefig("sort_bars_in_barplot_descending_order_Seaborn_Python.png", dpi=100)
+df_1 = df.iloc[:,6:12]
+df_2 = df.iloc[:,2:3]
+df_corr = pd.concat([df_1 , df_2], axis=1)
+
+sns.heatmap(df_corr.corr(),annot=True,linewidths=.5,cmap='coolwarm',
+        xticklabels=world_columns, yticklabels=world_columns)
+plt.xticks(rotation=90) 
+plt.yticks(rotation=0) 
+plt.title('Pearson Correlation Heatmap', fontsize =20)
+plt.tight_layout() # this one line took me about 2 hours, could not figure out how to not cut off my x and yicklabels
+plt.savefig('Heatmap.png')
+plt.show()
 
 
-# https://datavizpyr.com/how-to-make-simple-facet-plots-with-seaborn-catplot-in-python/
+def reg_dist(column):
+    g=sns.catplot(x=column,  y='Regional_Indicator', data=df,kind='box',palette='husl',
+            showmeans=True,
+            meanprops={'marker':'o',
+                       'markerfacecolor':'white', 
+                       'markeredgecolor':'black',
+                      'markersize':'5'})
+    g.fig.set_size_inches(12,6)
+    g.fig.suptitle('Comparing distribution by Region',weight='bold')
+    g.set(xlabel=column,ylabel='Region')
+    plt.tight_layout()
+    plt.show()
 
-#g=sns.catplot(x='Regional_Indicator',  y='Logged_GDPper_Capita', kind='box', data=df,whis=[0,100])
-#g.fig.suptitle('Comparing GDP by Region',y=1.03)
-#g.set(xlabel='Region',ylabel='GDP')
-#plt.xticks(rotation=90)
+for x in df_corr:
+    print(reg_dist(x))
 
-#need to change size
-# sns.catplot(x='',  y='Logged_GDPper_Capita', kind='bar', data=df)
-#maybe just use a normal scatter plot
-#sns.set(color_codes=True)
-#sns.palplot(sns.color_palette('Purples', 10))
+sns.set()  
+pair_g=sns.pairplot(data=df, x_vars=['Ladder_Score', 'Logged_GDPper_Capita']
+            ,y_vars=['Social_Support', 'Healthy_Life_Expectancy']
+            ,hue='Regional_Indicator',palette='husl',diag_kind=None)
+             #if i dont put diag_kind=None there are two blank grids
+pair_g.fig.set_size_inches(12,6)
+pair_g.fig.suptitle('Comparing the relationships across Happiness, GDP, Social Support; and Life Expectancy',y=1,weight='bold')
 
 
-#Fit a higher-order polynomial regression: look into this
+sns.set()
+g=sns.pairplot(data=df,
+             vars=['Freedom_Make_Life_Choices', 'Ladder_Score'],
+             kind='scatter',
+             palette='husl',
+             diag_kind ='kde',
+             hue='Regional_Indicator')   
+g.fig.set_size_inches(12,6)    
+g.fig.suptitle('Freedom and Happiness', weight='bold',y=1,)
+plt.show()
 
 df['Pop_2020'] = df['Pop_2020'].div(1000000)
-sns.set_style('ticks')
-sns.set(font_scale= 1.5)
-g=sns.regplot(x='Ladder_Score',y='Logged_GDPper_Capita',data=df,scatter_kws={'s': df['Pop_2020'],'color':'purple','alpha':0.8},line_kws={'color':'m'})
-g.set(xlabel='Ladder Score', ylabel='GDP per Capita',xlim=(2,8),ylim=(6,12))
-plt.title('Happiness & GDP', fontsize =20, weight='bold',y=1)
+l_gdp=sns.regplot(x='Ladder_Score',y='Logged_GDPper_Capita',data=df,
+            scatter_kws={'s': df['Pop_2020'],'color':'g','alpha':0.8},
+            line_kws={'color':'g'})
+l_gdp.set(xlabel='Ladder Score', ylabel='GDP per Capita',xlim=(2,8),ylim=(6,12))
+plt.title('GDP and Happiness', fontsize =16, weight='bold',y=1)
 plt.tight_layout()
-plt.savefig('HappinessVsGDP.png')
+
+
 plt.show()
-plt.clf()
+
+
+
 
