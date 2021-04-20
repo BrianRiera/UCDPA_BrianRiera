@@ -10,8 +10,9 @@ print('--'*30)
 print(df.value_counts(['Regional_Indicator','Ladder_Category']).sort_index())
 
 print(df['Ladder_Category'].value_counts())
-
+print(df.loc[df['Ladder_Category'] == 'Suffering'])
 print('--'*30)
+
 
 def RegCalc(column):
         return(df.groupby('Regional_Indicator', as_index=False).agg({column:['min','max','mean']}).round(3))
@@ -25,9 +26,8 @@ def CountryCalc(column):
         var1=df.iloc[df[column].idxmin()]
         return(var[0] +' scored highest in '+ column +' while '+ var1[0] +' scored lowest in '+ column)
 
-df_1 = df.iloc[:,6:12]
-df_2 = df.iloc[:,2:3]
-df_calc = pd.concat([df_1 , df_2], axis=1)
+
+df_calc = df.iloc[:,[2,6,7,8,9,10,11]]
 
 for x in df_calc:
         print(RegCalc(x))
@@ -51,9 +51,11 @@ print('--'*30)
         #correlation=df['Ladder_Score'].corr(df[6:], method='pearson') 
         #ValueError: operands could not be broadcast together with shapes (143,) (143,20)
 #Method 4: print relevant columns
-# print('--'*30)
 
-pearson_scores = df_1.corrwith(df['Ladder_Score'],method='pearson')
-print('Correlation coefficient of Ladder Score with columns below:\n', pearson_scores)
+df_1 = df.iloc[:,6:12]
+df_ls = df_1.corrwith(df['Ladder_Score'])
+print('Correlation coefficient of Ladder Score with columns below:\n', df_ls)
+
+
 
 

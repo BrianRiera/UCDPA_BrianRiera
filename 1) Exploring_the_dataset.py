@@ -17,6 +17,7 @@ pop_df = pd.merge(df, pop_1, how='left', left_on='Country name', right_on='Count
 pop_df_alter = pop_df.drop(columns='Country (or dependency)')
 
 df1=pop_df_alter.sort_values('Country name', ascending = True).reset_index(drop=True)
+# perhaps could have tried this instead df1.columns = df.columns.str.replace(' ', '_') 
 df1.rename(columns={'Country name':'Country_Name',
                      'Regional indicator':'Regional_Indicator',
                     'Ladder score':'Ladder_Score',
@@ -41,8 +42,8 @@ df1.rename(columns={'Country name':'Country_Name',
 # With missing numeric values the alternative options i would've considered are below:
 # new_df.fillna(new_df.mean(), inplace=True) or a forward/back fill but think it would be better to drop in this context 
 # new_df2 = new_df.drop_duplicates(subset['column_name1'])
-#df['column name'] = df['column name'].replace(['1st old value','2nd old value',...],
-# ['1st new value','2nd new value',...])
+
+#df['column name'] = df['column name'].replace(['1st old value','2nd old value',...],['1st new value','2nd new value',...])
 
 print(df1.isnull().sum())
 df1.dropna(subset = ['Pop_2020'], inplace=True)

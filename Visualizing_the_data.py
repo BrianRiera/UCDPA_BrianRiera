@@ -9,11 +9,12 @@ df_1 = df.iloc[:,6:12]
 df_2 = df.iloc[:,2:3]
 df_corr = pd.concat([df_1 , df_2], axis=1)
 
+
 sns.heatmap(df_corr.corr(),annot=True,linewidths=.5,cmap='coolwarm',
         xticklabels=world_columns, yticklabels=world_columns)
 plt.xticks(rotation=90) 
 plt.yticks(rotation=0) 
-plt.title('Pearson Correlation Heatmap', fontsize =20)
+plt.title('Correlation Heatmap', fontsize =20)
 plt.tight_layout() # this one line took me about 2 hours, could not figure out how to not cut off my x and yicklabels
 plt.savefig('Heatmap.png')
 plt.show()
@@ -55,6 +56,7 @@ g.fig.set_size_inches(12,6)
 g.fig.suptitle('Freedom and Happiness', weight='bold',y=1,)
 plt.show()
 
+sns.set_style('ticks')
 df['Pop_2020'] = df['Pop_2020'].div(1000000)
 l_gdp=sns.regplot(x='Ladder_Score',y='Logged_GDPper_Capita',data=df,
             scatter_kws={'s': df['Pop_2020'],'color':'g','alpha':0.8},
@@ -65,7 +67,4 @@ plt.tight_layout()
 
 
 plt.show()
-
-
-
 
