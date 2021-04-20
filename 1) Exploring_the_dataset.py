@@ -1,3 +1,6 @@
+#https://www.kaggle.com/ajaypalsinghlo/world-happiness-report-2021
+#https://www.kaggle.com/tanuprabhu/population-by-country-2020
+
 import pandas as pd
 
 df=pd.read_csv('world-happiness-report-2021.csv')
